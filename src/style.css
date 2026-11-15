@@ -1699,3 +1699,51 @@ html[dir='rtl'] * {
   direction: ltr;
   touch-action: manipulation;
 }
+
+/* ==========================================================================
+   Language switcher: all three languages always visible (top-left)
+   ========================================================================== */
+.lang-group {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 60;
+  display: inline-flex;
+  direction: ltr; /* keeps the order ENG, عربي, کوردی in every language */
+  gap: 4px;
+  padding: 4px;
+  background: rgba(79, 14, 21, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.5);
+}
+
+.lang-group__btn {
+  min-width: 46px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gold-soft);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lang-group__btn:hover {
+  background: rgba(233, 215, 164, 0.14);
+}
+
+.lang-group__btn.is-active {
+  background: var(--gold);
+  color: var(--burgundy-deep);
+}
+
+.lang-group__btn:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 2px;
+}

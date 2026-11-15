@@ -1,33 +1,25 @@
 <script setup>
-import { computed } from 'vue'
 import { useLanguage } from '../composables/useLanguage'
 
 const { locale, languages, setLocale, t } = useLanguage()
 
-// Short label for each language, shown in its own script so it's easy to recognise
+// Short labels that fit on a phone
 const shortLabels = { en: 'ENG', ar: 'عربي', ku: 'کوردی' }
-
-const currentLabel = computed(() => shortLabels[locale.value] ?? 'ENG')
-
-// The language that the button will switch to on the next tap
-const nextCode = computed(() => {
-  const i = languages.findIndex((l) => l.code === locale.value)
-  return languages[(i + 1) % languages.length].code
-})
-
-function cycleLanguage() {
-  setLocale(nextCode.value)
-}
 </script>
 
 <template>
-  <button
-    type="button"
-    class="lang-btn"
-    :lang="locale"
-    :aria-label="`${t('aria.language')}: ${currentLabel}`"
-    @click="cycleLanguage"
-  >
-    {{ currentLabel }}
-  </button>
+  <div class="lang-group" role="group" :aria-label="t('aria.language')">
+    <button
+      v-for="l in languages"
+      :key="l.code"
+      type="button"
+      class="lang-group__btn"
+      :class="{ 'is-active': locale === l.code }"
+      :aria-pressed="locale === l.code"
+      :lang="l.code"
+      @click="setLocale(l.code)"
+    >
+      {{ shortLabels[l.code] }}
+    </button>
+  </div>
 </template>
