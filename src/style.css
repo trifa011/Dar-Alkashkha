@@ -1637,3 +1637,32 @@ textarea {
    margin-top: 14px;
   color: var(--gold-soft);
 }
+
+
+/* Stop the page from being wider than the phone screen (iPhone Safari needs both html and body) */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Keep the animated background inside the hero */
+.hero,
+.hero-bg {
+  max-width: 100%;
+  overflow: hidden;
+  contain: paint;
+}
+
+main,
+section {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Make taps on the language button register immediately on phones */
+.lang-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
