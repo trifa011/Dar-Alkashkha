@@ -1666,3 +1666,36 @@ section {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ==========================================================================
+   Arabic and Kurdish: right-to-left layout and fonts (restored)
+   ========================================================================== */
+html[dir='rtl'] body,
+html[lang='ar'] body,
+html[lang='ku'] body {
+  font-family: 'Geeza Pro', 'Segoe UI', Tahoma, Arial, sans-serif;
+  line-height: 1.9;
+}
+
+html[dir='rtl'] .hero__script,
+html[dir='rtl'] .hero__title,
+html[dir='rtl'] .section__title,
+html[dir='rtl'] .feedback__list-title,
+html[dir='rtl'] .connect__label,
+html[dir='rtl'] .feedback-card__name {
+  font-family: 'Geeza Pro', 'Segoe UI', Tahoma, serif;
+  font-style: normal;
+  letter-spacing: normal;
+}
+
+/* No uppercase or letter spacing for Arabic and Kurdish text */
+html[dir='rtl'] * {
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* Keep the language button order fixed in every language */
+.lang-btn {
+  direction: ltr;
+  touch-action: manipulation;
+}
