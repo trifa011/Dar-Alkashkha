@@ -9,18 +9,22 @@ const props = defineProps({
 
 const { t } = useLanguage()
 
-// Always English digits and AM/PM, Baghdad time, in every language
-const dateLabel = computed(() =>
-  new Intl.DateTimeFormat('en-GB', {
+// Always: 26 Nov 2026, 12:21 AM (Baghdad time), in every language
+const dateLabel = computed(() => {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Baghdad',
     day: 'numeric',
     month: 'short',
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZone: 'Asia/Baghdad',
-  }).format(new Date(props.item.created_at)),
-)
+  }).formatToParts(new Date(props.item.created_at))
+
+  const get = (type) => parts.find((p) => p.type === type)?.value ?? ''
+
+  return `${get('day')} ${get('month')} ${get('year')}, ${get('hour')}:${get('minute')} ${get('dayPeriod').toUpperCase()}`
+})
 </script>
 
 <template>
@@ -39,7 +43,7 @@ const dateLabel = computed(() =>
     </div>
     <footer class="feedback-card__footer">
       <span class="feedback-card__name">{{ item.customer_name }}</span>
-      <time :datetime="item.created_at">{{ dateLabel }}</time>
+      <time :datetime="item.created_at" dir="ltr" class="feedback-card__date">{{ dateLabel }}</time>
     </footer>
   </article>
 </template>
