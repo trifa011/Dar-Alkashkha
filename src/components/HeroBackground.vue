@@ -18,6 +18,7 @@ const showVideo = computed(() => Boolean(brand.heroVideo) && !videoFailed.value)
 
 const unlocked = ref(false) // browser allows sound (after first tap or click)
 const inView = ref(true) // hero is mostly on screen
+const pageVisible = ref(true) // visitor is still on this page
 
 let observer = null
 const UNLOCK_EVENTS = ['pointerdown', 'keydown', 'touchstart']
@@ -25,12 +26,35 @@ const UNLOCK_EVENTS = ['pointerdown', 'keydown', 'touchstart']
 function applySound() {
   const v = videoEl.value
   if (!v) return
+
+  // Leaving the page: stop the video completely
+  if (!pageVisible.value) {
+    v.muted = true
+    v.pause()
+    return
+  }
+
   v.muted = !(unlocked.value && inView.value)
   if (v.paused) v.play().catch(() => {})
 }
 
 function unlock() {
   unlocked.value = true
+  applySound()
+}
+
+function onVisibilityChange() {
+  pageVisible.value = !document.hidden
+  applySound()
+}
+
+function onPageHide() {
+  pageVisible.value = false
+  applySound()
+}
+
+function onPageShow() {
+  pageVisible.value = true
   applySound()
 }
 
@@ -44,14 +68,17 @@ onMounted(async () => {
     v.muted = false
     try {
       await v.play()
-      unlocked.value = true // browser allowed sound straight away
+      unlocked.value = true
     } catch {
-      v.muted = true // blocked: play silently until the first tap
+      v.muted = true
       v.play().catch(() => {})
     }
   }
 
   UNLOCK_EVENTS.forEach((evt) => window.addEventListener(evt, unlock, { once: true, passive: true }))
+  document.addEventListener('visibilitychange', onVisibilityChange)
+  window.addEventListener('pagehide', onPageHide)
+  window.addEventListener('pageshow', onPageShow)
 
   if ('IntersectionObserver' in window && rootEl.value) {
     observer = new IntersectionObserver(
@@ -70,6 +97,9 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   observer?.disconnect()
   UNLOCK_EVENTS.forEach((evt) => window.removeEventListener(evt, unlock))
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  window.removeEventListener('pagehide', onPageHide)
+  window.removeEventListener('pageshow', onPageShow)
 })
 </script>
 
