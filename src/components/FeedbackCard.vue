@@ -7,16 +7,20 @@ const props = defineProps({
   item: { type: Object, required: true },
 })
 
-const { t, current } = useLanguage()
+const { t } = useLanguage()
 
+// Always English digits and AM/PM, Baghdad time, in every language
 const dateLabel = computed(() =>
-  new Intl.DateTimeFormat(current.value.intl, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+  new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
     timeZone: 'Asia/Baghdad',
   }).format(new Date(props.item.created_at)),
 )
-
 </script>
 
 <template>
